@@ -2,11 +2,14 @@
 Source: https://github.com/pedro-tavares/spring-boot-r2dbc
 
 ## Setup
+1. Spring Boot 2.2.4
+2. Kotlin 1.3.70
+3. JRE 8
+4. Postgresql : https://www.postgresql.org/download/
 
-This project demonstrates how to use R2DBC with Spring boot to reactively connect to a relational database. The database I'm using in this example is PostgreSQL. To set up a PostgreSQL database, you can run the Docker container by using the following command:
+This project demonstrates how to use R2DBC with Spring boot to reactively connect to a relational database. 
 
-Additionally, you can run the Spring boot application by using Maven:
-
+## Running the application
 ```
 mvn spring-boot:run
 ```

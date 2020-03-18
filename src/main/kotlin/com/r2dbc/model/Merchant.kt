@@ -12,12 +12,5 @@ data class Merchant(
         var password: String,
         var status: String? = null
 ) {
-    constructor(id: Long) : this(
-            id,
-            "",
-            "",
-            "",
-            "",
-            "")
-    {}
+    constructor(id: Long) : this(id, "", "", "", "", "")
 }

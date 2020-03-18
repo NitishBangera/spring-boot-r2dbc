@@ -4,7 +4,6 @@ import com.r2dbc.model.LoginRequest
 import com.r2dbc.model.Merchant
 import com.r2dbc.repository.MerchantRepository
 import com.r2dbc.service.MerchantService
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -15,9 +14,6 @@ import reactor.core.publisher.Mono
 @RestController
 @RequestMapping("merchants")
 class MerchantController(private val merchantService: MerchantService) {
-    @Autowired
-    private val merchantRepository: MerchantRepository? = null
-
     @PostMapping(value = ["login"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun login(@ModelAttribute("merchant") request: LoginRequest): ResponseEntity<*>? {
         val response = (request.password?.let { request.email?.let { it1 -> merchantService.login(it1, it) } })
@@ -26,16 +22,16 @@ class MerchantController(private val merchantService: MerchantService) {
 
     @GetMapping("flux")
     fun findAll(): Flux<Merchant?> {
-        return merchantRepository!!.findAll()
+        return merchantService.findAll()
     }
 
     @GetMapping("/mono/name/{registeredName}")
     fun findByRegisteredName(@PathVariable registeredName: String?): Mono<Merchant?>? {
-        return merchantRepository!!.findByRegisteredName(registeredName)
+        return merchantService.findByRegisteredName(registeredName)
     }
 
     @GetMapping("/mono/email/{email}")
     fun findByEmail(@PathVariable email: String?): Mono<Merchant?>? {
-        return merchantRepository!!.findByEmail(email)
+        return merchantService.findByEmail(email)
     }
 }

@@ -1,6 +1,7 @@
 package com.r2dbc
 
 import lombok.RequiredArgsConstructor
+import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -9,10 +10,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
 
-@CrossOrigin(origins = ["http://127.0.0.1:8088", "http://localhost:8088"], maxAge = 3600)
 @RestController
 @RequestMapping("/merchants")
 @RequiredArgsConstructor
@@ -22,34 +24,27 @@ class MerchantController {
     @Autowired
     private val merchantRepository: MerchantRepository? = null
 
-    //    @GetMapping("/login/{email}/{password}")
-    @ResponseBody
-    fun login(@PathVariable email: String, @PathVariable password: String): ResponseEntity<*> {
-        LOG.debug("\nlogin, email:$email, password:$password\n")
-        val found = AtomicBoolean(false)
+    fun login(email: String, password: String): ResponseEntity<*> {
         val authenticated = AtomicBoolean(false)
-        val result = AtomicReference<ResponseEntity<*>>(ResponseEntity.notFound().build<Any>())
+        val queue: BlockingQueue<ResponseEntity<*>> = LinkedBlockingQueue<ResponseEntity<*>>()
         merchantRepository!!.findByEmail(email)?.subscribe(
                 { value ->
-                    LOG.debug("\nFOUND:$value\n")
-                    found.set(true)
                     if (value != null) {
                         authenticated.set(password == value.password)
                     }
                     if (authenticated.get()) {
-                        LOG.debug("\nAUTHENTICATED:$email\n")
-                        result.set(ResponseEntity.ok().build<Any>())
+                        queue.put(ResponseEntity.ok("AUTHENTICATED : $email"))
                     } else {
-                        LOG.debug("\nUNAUTHORIZED:$email\n")
-                        result.set(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build<Any>())
+                        LOG.debug("UNAUTHORIZED:$email")
+                        queue.put(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password"))
                     }
                 }
-        ) { error: Throwable ->
-            error.printStackTrace()
-            result.set(ResponseEntity.notFound().build<Any>())
+        ) {
+            error: Throwable ->
+                LOG.error("Exception", error)
         }
-        LOG.info("Returning")
-        return result.get()
+        var response = queue.poll(10, TimeUnit.SECONDS)
+        return response ?: ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email")
     }
 
     @PostMapping(value = ["/login"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])

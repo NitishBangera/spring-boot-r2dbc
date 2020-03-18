@@ -33,7 +33,7 @@ open class Application {
 
     @get:Throws(URISyntaxException::class)
     private val schema: Mono<String>
-        private get() {
+        get() {
             val path = Paths.get(ClassLoader.getSystemResource("schema.sql").toURI())
             return Flux
                     .using({ Files.lines(path) }, { s: Stream<String>? -> Flux.fromStream(s) }) { obj: Stream<String> -> obj.close() }

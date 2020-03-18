@@ -2,9 +2,7 @@ package com.r2dbc.controller
 
 import com.r2dbc.model.LoginRequest
 import com.r2dbc.model.Merchant
-import com.r2dbc.repository.MerchantRepository
 import com.r2dbc.service.MerchantService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

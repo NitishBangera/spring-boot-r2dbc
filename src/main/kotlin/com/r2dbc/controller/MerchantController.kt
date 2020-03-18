@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping("merchants")
+@RequestMapping("merchant")
 class MerchantController(private val merchantService: MerchantService) {
     @PostMapping(value = ["login"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun login(@ModelAttribute("merchant") request: LoginRequest): ResponseEntity<*>? {
@@ -20,17 +20,17 @@ class MerchantController(private val merchantService: MerchantService) {
         return ResponseEntity.status(response.status).body(response.message)
     }
 
-    @GetMapping("flux")
+    @GetMapping("all")
     fun findAll(): Flux<Merchant?> {
         return merchantService.findAll()
     }
 
-    @GetMapping("/mono/name/{registeredName}")
+    @GetMapping("/find/name/{registeredName}")
     fun findByRegisteredName(@PathVariable registeredName: String?): Mono<Merchant?>? {
         return merchantService.findByRegisteredName(registeredName)
     }
 
-    @GetMapping("/mono/email/{email}")
+    @GetMapping("/find/email/{email}")
     fun findByEmail(@PathVariable email: String?): Mono<Merchant?>? {
         return merchantService.findByEmail(email)
     }

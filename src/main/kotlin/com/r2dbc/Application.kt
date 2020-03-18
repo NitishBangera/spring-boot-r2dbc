@@ -1,5 +1,6 @@
 package com.r2dbc
 
+import com.r2dbc.repository.MerchantRepository
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner

@@ -1,7 +1,8 @@
-package com.r2dbc
+package com.r2dbc.controller
 
+import com.r2dbc.model.Merchant
+import com.r2dbc.repository.MerchantRepository
 import lombok.RequiredArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

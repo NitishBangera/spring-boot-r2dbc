@@ -1,5 +1,4 @@
 # Example using the Spring boot starter for Spring Data R2DBC
-Source: https://github.com/pedro-tavares/spring-boot-r2dbc
 
 ## Setup
 1. Spring Boot 2.2.4
@@ -14,8 +13,12 @@ This project demonstrates how to use R2DBC with Spring boot to reactively connec
 mvn spring-boot:run
 ```
 
+## Apis
 ```
-http://localhost:8080/merchant/flux
-http://localhost:8080/merchant/mono/name/{firstname}
-http://localhost:8080/merchant/mono/email/{email}
+http://localhost:8080/merchant/login
+http://localhost:8080/merchant/all
+http://localhost:8080/merchant/find/name/{firstname}
+http://localhost:8080/merchant/find/email/{email}
 ```
+
+Java version: https://github.com/pedro-tavares/spring-boot-r2dbc
